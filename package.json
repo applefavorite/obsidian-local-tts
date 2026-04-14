@@ -1,0 +1,25 @@
+{
+  "name": "obsidian-local-tts",
+  "version": "1.0.0",
+  "description": "High-quality offline text-to-speech for Obsidian using Kokoro-82M neural TTS",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit --skipLibCheck && node esbuild.config.mjs production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "kokoro-js": "^1.2.1",
+    "obsidian": "latest"
+  },
+  "devDependencies": {
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
+    "@types/node": "^16.11.6",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "0.17.3",
+    "typescript": "^4.7.4"
+  }
+}

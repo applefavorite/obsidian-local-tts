@@ -1,0 +1,10 @@
+{
+  "name": "obsidian-local-tts-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Local TTS inference server for obsidian-local-tts",
+  "private": true,
+  "dependencies": {
+    "kokoro-js": "^1.2.1"
+  }
+}

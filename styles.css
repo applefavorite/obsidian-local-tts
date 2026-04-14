@@ -1,0 +1,275 @@
+/* ─── 句子高亮 ──────────────────────────────────────────────────────── */
+.local-tts-highlight {
+  background-color: var(--local-tts-highlight-color, rgba(255, 208, 0, 0.3));
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+/* ─── 状态栏控制条 ────────────────────────────────────────────────── */
+.local-tts-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-normal);
+  padding: 0 6px;
+  max-width: 480px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.local-tts-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background-color 0.15s ease;
+}
+
+.local-tts-btn:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.local-tts-speed-btn {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 1px 3px;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+}
+
+.local-tts-speed-btn:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.local-tts-separator {
+  color: var(--text-faint);
+  margin: 0 1px;
+}
+
+.local-tts-progress {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.local-tts-text-preview {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: italic;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── 设置页面 ────────────────────────────────────────────────────── */
+.local-tts-model-status {
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.local-tts-progress-bar {
+  display: none;
+  width: 100%;
+  height: 8px;
+  background-color: var(--background-modifier-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.local-tts-progress-fill {
+  height: 100%;
+  background-color: var(--interactive-accent);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  text-align: center;
+  font-size: 9px;
+  line-height: 8px;
+  color: var(--text-on-accent);
+  min-width: 20px;
+}
+
+/* ─── 服务器状态显示 ─────────────────────────────────────────────── */
+.local-tts-server-status {
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.local-tts-server-status.status-ready {
+  background-color: rgba(0, 200, 100, 0.12);
+  color: var(--color-green);
+}
+
+.local-tts-server-status.status-loading {
+  background-color: rgba(255, 180, 0, 0.12);
+  color: var(--color-yellow);
+}
+
+.local-tts-server-status.status-error,
+.local-tts-server-status.status-stopped {
+  background-color: rgba(220, 50, 50, 0.08);
+  color: var(--color-red);
+}
+
+/* ─── 浮动播放条（预留） ─────────────────────────────────────────── */
+.local-tts-playback-bar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  font-size: 13px;
+  color: var(--text-normal);
+}
+
+.local-tts-playback-bar .local-tts-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+
+/* ─── 🔖 书签按钮（播放栏内）────────────────────────────────────────── */
+.local-tts-bookmark-btn {
+  opacity: 0.55;
+  border-radius: 3px;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.local-tts-bookmark-btn:hover {
+  opacity: 1;
+  background-color: var(--background-modifier-hover);
+}
+
+/* 有书签时高亮 */
+.local-tts-bookmark-btn.has-bookmark {
+  opacity: 1;
+  color: var(--interactive-accent);
+  filter: drop-shadow(0 0 3px var(--interactive-accent));
+}
+
+.local-tts-bookmark-btn.has-bookmark:hover {
+  background-color: rgba(var(--interactive-accent-rgb, 99, 102, 241), 0.12);
+}
+
+/* ─── 📋 书签列表按钮 ────────────────────────────────────────────── */
+.local-tts-bookmark-list-btn {
+  opacity: 0.55;
+  border-radius: 3px;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.local-tts-bookmark-list-btn:hover {
+  opacity: 1;
+  background-color: var(--background-modifier-hover);
+}
+
+/* ─── 🔖 Resume 静态胶囊（空闲状态）─────────────────────────────── */
+.local-tts-resume-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--interactive-accent);
+  border: 1px solid var(--interactive-accent);
+  opacity: 0.8;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.local-tts-resume-pill:hover {
+  opacity: 1;
+  background-color: rgba(var(--interactive-accent-rgb, 99, 102, 241), 0.1);
+}
+
+/* ─── 书签 Modal ─────────────────────────────────────────────────── */
+.local-tts-bookmark-modal h2,
+.local-tts-resume-modal h3 {
+  margin-bottom: 12px;
+}
+
+.local-tts-bookmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.local-tts-bookmark-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+}
+
+.local-tts-bookmark-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.local-tts-bookmark-filename {
+  font-weight: 600;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.local-tts-bookmark-preview {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.local-tts-bookmark-time {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.local-tts-bookmark-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ─── 续读选择 Modal ─────────────────────────────────────────────── */
+.local-tts-choice-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.local-tts-choice-btns button {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+}

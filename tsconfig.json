@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "ESNext",
+    "target": "ES2018",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "strictNullChecks": true,
+    "lib": ["ES2018", "DOM"],
+    "paths": {
+      "src/*": ["src/*"],
+      "kokoro-js": ["./node_modules/kokoro-js/types/kokoro.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

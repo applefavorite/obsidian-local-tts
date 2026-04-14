@@ -1,0 +1,10 @@
+{
+  "id": "obsidian-local-tts",
+  "name": "Local TTS - Read Your Notes",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "High-quality offline text-to-speech for your notes. No API key needed. Powered by Kokoro-82M neural TTS running locally via WebAssembly.",
+  "author": "applefavorite",
+  "authorUrl": "https://github.com/applefavorite",
+  "isDesktopOnly": true
+}
