@@ -15,6 +15,23 @@ High-quality **offline** neural text-to-speech for Obsidian. No API key, no inte
 - 🗣️ **7 voices** — American & British, male & female
 - 🖥️ **Desktop only** — macOS, Windows, Linux (requires Electron / Node.js)
 
+## Screenshots
+
+### Reading with sentence highlighting
+![Reading](screenshots/1.png)
+
+### Settings
+![Settings](screenshots/2.png)
+
+### Commands
+![Commands](screenshots/3.png)
+
+### Playback controls
+![Controls](screenshots/4.png)
+
+### Bookmarks
+![Bookmarks](screenshots/5.png)
+
 ## Requirements
 
 - **Obsidian Desktop** (not supported on mobile)
