@@ -6,5 +6,6 @@
   "description": "High-quality offline text-to-speech for your notes. No API key needed. Powered by Kokoro-82M neural TTS running locally via WebAssembly.",
   "author": "applefavorite",
   "authorUrl": "https://github.com/applefavorite",
+  "fundingUrl": "https://buymeacoffee.com/applefavorite",
   "isDesktopOnly": true
 }

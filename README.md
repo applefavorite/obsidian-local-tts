@@ -169,6 +169,12 @@ Make sure you are in the source editor (not Reading View). If the problem persis
 
 > Like offline TTS? Check out **PaperVoice** on the App Store — AI-powered PDF reader for academic papers.
 
+## Support
+
+If you find this plugin useful, consider buying me a coffee ☕
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow?style=flat&logo=buy-me-a-coffee)](https://buymeacoffee.com/applefavorite)
+
 ## License
 
-MIT © 2025 QD
+MIT © 2025 applefavorite
