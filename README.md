@@ -1,3 +1,5 @@
+🌐 [English](README.md) | [中文](README_ZH.md) | [Deutsch](README_DE.md) | [日本語](README_JA.md) | [Español](README_ES.md) | [Français](README_FR.md) | [한국어](README_KO.md) | [Português](README_PT.md)
+
 # Local TTS — Read Your Notes Aloud
 
 High-quality **offline** neural text-to-speech for Obsidian. No API key, no internet (after first run), no subscriptions.
