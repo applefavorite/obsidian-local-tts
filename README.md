@@ -63,6 +63,10 @@ The plugin will automatically install its server dependencies (`kokoro-js`) on f
 
 ## Usage
 
+1. Click the **🔊 speaker icon** in the left sidebar, or press `Cmd/Ctrl + Shift + L`.
+2. Choose where to start: **beginning**, **cursor position**, or **last bookmark**.
+3. Control playback from the **status bar** at the bottom of the window.
+
 | Action | How |
 |--------|-----|
 | Read current note | `Cmd/Ctrl + Shift + L` or click 🔊 in the ribbon |
