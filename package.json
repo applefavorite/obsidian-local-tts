@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-local-tts",
+  "name": "local-tts",
   "version": "1.0.0",
-  "description": "High-quality offline text-to-speech for Obsidian using Kokoro-82M neural TTS",
+  "description": "High-quality offline text-to-speech using Kokoro-82M neural TTS",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
