@@ -45,13 +45,25 @@ Un plugin de synthèse vocale neuronale **hors ligne** pour Obsidian. Pas de cl�
 
 ## Installation
 
-### Manuelle (en attendant la validation dans le store communautaire)
+### Méthode 1 : BRAT (Recommandé)
+
+1. Installez le plugin [BRAT](https://github.com/TfTHacker/obsidian42-brat) depuis les plugins communautaires d'Obsidian
+2. Ouvrez Paramètres → BRAT → Add Beta Plugin
+3. Saisissez `applefavorite/obsidian-local-tts`
+4. Activez le plugin dans Paramètres → Plugins communautaires
+5. BRAT gère les mises à jour automatiquement
+
+### Méthode 2 : Installation manuelle
 
 1. Téléchargez `main.js`, `styles.css`, `manifest.json` et le dossier `server/` depuis la [dernière version](https://github.com/applefavorite/obsidian-local-tts/releases)
 2. Copiez tout dans `<votre vault>/.obsidian/plugins/obsidian-local-tts/`
 3. Activez **Local TTS** dans Paramètres → Plugins communautaires
 
 Au premier chargement, le plugin lance automatiquement `npm install` pour installer `kokoro-js`.
+
+### Méthode 3 : Plugins communautaires (Bientôt disponible)
+
+Recherchez « Local TTS » dans Paramètres → Plugins communautaires (en cours de validation).
 
 ### Première utilisation
 

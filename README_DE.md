@@ -45,13 +45,25 @@ Hochwertiges **Offline**-TTS für Obsidian, direkt auf Ihrem Rechner. Kein API-S
 
 ## Installation
 
-### Manuell (bis zur Aufnahme in den Community-Plugin-Store)
+### Methode 1: BRAT (Empfohlen)
+
+1. Das Plugin [BRAT](https://github.com/TfTHacker/obsidian42-brat) über den Community-Plugin-Store installieren
+2. Einstellungen → BRAT → Add Beta Plugin öffnen
+3. `applefavorite/obsidian-local-tts` eingeben
+4. **Local TTS** in den Community-Plugins aktivieren
+5. BRAT kümmert sich automatisch um zukünftige Updates
+
+### Methode 2: Manuelle Installation
 
 1. `main.js`, `styles.css`, `manifest.json` und den Ordner `server/` aus dem [neuesten Release](https://github.com/applefavorite/obsidian-local-tts/releases) herunterladen
 2. Alles nach `<Vault>/.obsidian/plugins/obsidian-local-tts/` kopieren
 3. In Einstellungen → Community-Plugins **Local TTS** aktivieren
 
 Beim ersten Start führt das Plugin automatisch `npm install` für `kokoro-js` aus.
+
+### Methode 3: Community-Plugins (Demnächst verfügbar)
+
+In Einstellungen → Community-Plugins nach „Local TTS" suchen (Überprüfung steht noch aus).
 
 ### Erste Schritte
 

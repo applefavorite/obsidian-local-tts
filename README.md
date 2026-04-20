@@ -45,13 +45,25 @@ High-quality **offline** neural text-to-speech for Obsidian. No API key, no inte
 
 ## Installation
 
-### Manual (until community plugin submission is approved)
+### Method 1: BRAT (Recommended)
 
-1. Download `main.js`, `styles.css`, `manifest.json`, and the `server/` folder from the [latest release](https://github.com/qiangdong/obsidian-local-tts/releases).
+1. Install the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin from Obsidian Community Plugins
+2. Open Settings → BRAT → Add Beta Plugin
+3. Enter `applefavorite/obsidian-local-tts`
+4. Enable the plugin in Community Plugins settings
+5. BRAT will handle updates automatically
+
+### Method 2: Manual Installation
+
+1. Download `main.js`, `styles.css`, `manifest.json`, and the `server/` folder from the [latest release](https://github.com/applefavorite/obsidian-local-tts/releases).
 2. Copy everything to `<vault>/.obsidian/plugins/obsidian-local-tts/`.
 3. Enable **Local TTS** in Settings → Community Plugins.
 
 The plugin will automatically install its server dependencies (`kokoro-js`) on first load.
+
+### Method 3: Community Plugins (Coming Soon)
+
+Search "Local TTS" in Settings → Community Plugins (pending review).
 
 ### First-run checklist
 

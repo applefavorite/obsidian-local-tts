@@ -45,13 +45,25 @@
 
 ## 安装方式
 
-### 手动安装（等待社区插件审核期间）
+### 方式一：通过 BRAT 安装（推荐）
+
+1. 先在「设置 → 第三方插件」中搜索并安装 [BRAT](https://github.com/TfTHacker/obsidian42-brat) 插件
+2. 打开「设置 → BRAT → Add Beta Plugin」
+3. 输入 `applefavorite/obsidian-local-tts`
+4. 在「第三方插件」中启用 Local TTS
+5. 后续更新由 BRAT 自动处理，省心省力
+
+### 方式二：手动安装
 
 1. 从 [Releases](https://github.com/applefavorite/obsidian-local-tts/releases) 下载 `main.js`、`styles.css`、`manifest.json` 和 `server/` 文件夹
 2. 整体复制到 `<你的 vault>/.obsidian/plugins/obsidian-local-tts/`
 3. 在「设置 → 第三方插件」里启用 **Local TTS**
 
 首次加载时插件会自动跑 `npm install` 安装 `kokoro-js`。
+
+### 方式三：社区插件市场（即将上线）
+
+在「设置 → 第三方插件 → 浏览」中搜索「Local TTS」（审核中，敬请期待）。
 
 ### 首次使用流程
 

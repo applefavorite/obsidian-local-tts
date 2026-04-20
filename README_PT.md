@@ -45,13 +45,25 @@ Um plugin de síntese de voz neural **offline** para o Obsidian. Sem API key, se
 
 ## Instalação
 
-### Manual (enquanto aguarda aprovação no repositório comunitário)
+### Método 1: BRAT (Recomendado)
+
+1. Instale o plugin [BRAT](https://github.com/TfTHacker/obsidian42-brat) pelos plugins da comunidade do Obsidian
+2. Abra Configurações → BRAT → Add Beta Plugin
+3. Digite `applefavorite/obsidian-local-tts`
+4. Ative o plugin em Configurações → Plugins da comunidade
+5. O BRAT cuida das atualizações automaticamente
+
+### Método 2: Instalação manual
 
 1. Baixe `main.js`, `styles.css`, `manifest.json` e a pasta `server/` do [último release](https://github.com/applefavorite/obsidian-local-tts/releases)
 2. Copie tudo para `<seu vault>/.obsidian/plugins/obsidian-local-tts/`
 3. Ative o **Local TTS** em Configurações → Plugins da comunidade
 
 No primeiro carregamento, o plugin roda `npm install` automaticamente para instalar o `kokoro-js`.
+
+### Método 3: Plugins da comunidade (Em breve)
+
+Procure "Local TTS" em Configurações → Plugins da comunidade (aguardando aprovação).
 
 ### Primeira vez
 

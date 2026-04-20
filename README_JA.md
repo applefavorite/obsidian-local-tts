@@ -45,13 +45,25 @@ Obsidian 向けの高品質オフライン音声合成プラグインです。AP
 
 ## インストール方法
 
-### 手動インストール（コミュニティプラグイン審査中の間）
+### 方法 1：BRAT 経由（おすすめ）
+
+1. Obsidian のコミュニティプラグインから [BRAT](https://github.com/TfTHacker/obsidian42-brat) をインストール
+2. 設定 → BRAT → Add Beta Plugin を開く
+3. `applefavorite/obsidian-local-tts` と入力
+4. コミュニティプラグイン設定で Local TTS を有効化
+5. 以降のアップデートは BRAT が自動で処理します
+
+### 方法 2：手動インストール
 
 1. [最新リリース](https://github.com/applefavorite/obsidian-local-tts/releases) から `main.js`・`styles.css`・`manifest.json`・`server/` フォルダをダウンロード
 2. `<vault>/.obsidian/plugins/obsidian-local-tts/` にすべてコピー
 3. 設定 → コミュニティプラグイン で **Local TTS** を有効化
 
 初回ロード時に、プラグインが自動で `npm install`（`kokoro-js` のインストール）を実行します。
+
+### 方法 3：コミュニティプラグイン（近日公開）
+
+設定 → コミュニティプラグイン → 閲覧 で「Local TTS」を検索（現在審査中です）。
 
 ### 初回セットアップ
 
