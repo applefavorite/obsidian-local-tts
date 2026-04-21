@@ -2,6 +2,8 @@
  * TTS Engine — HTTP client that talks to the local tts-server.mjs process.
  * No direct kokoro-js usage here; all inference runs in the Node.js server.
  */
+import { requestUrl } from "obsidian";
+
 export class TTSEngine {
   private _isReady = false;
   private serverUrl: string;
@@ -23,11 +25,8 @@ export class TTSEngine {
   /** Check if server is running and model is ready. */
   async initialize(): Promise<void> {
     try {
-      const resp = await fetch(`${this.serverUrl}/status`, {
-        signal: AbortSignal.timeout(3000),
-      });
-      if (!resp.ok) { this._isReady = false; return; }
-      const data = await resp.json() as { status: string };
+      const resp = await requestUrl({ url: `${this.serverUrl}/status` });
+      const data = resp.json as { status: string };
       this._isReady = data.status === "ready";
     } catch {
       this._isReady = false;
@@ -46,10 +45,8 @@ export class TTSEngine {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
       try {
-        const resp = await fetch(`${this.serverUrl}/status`, {
-          signal: AbortSignal.timeout(3000),
-        });
-        const data = await resp.json() as { status: string; error?: string };
+        const resp = await requestUrl({ url: `${this.serverUrl}/status` });
+        const data = resp.json as { status: string; error?: string };
         onProgress?.(data.status);
         if (data.status === "ready") { this._isReady = true; return; }
         if (data.status === "error") {
@@ -78,19 +75,20 @@ export class TTSEngine {
       throw new Error("TTS server is not ready.");
     }
 
-    const resp = await fetch(`${this.serverUrl}/tts`, {
+    const resp = await requestUrl({
+      url: `${this.serverUrl}/tts`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, voice: voiceId, speed }),
     });
 
-    if (!resp.ok) {
+    if (resp.status < 200 || resp.status >= 300) {
       let msg = `HTTP ${resp.status}`;
-      try { msg = ((await resp.json()) as { error: string }).error; } catch { /* ignore */ }
+      try { msg = (resp.json as { error: string }).error; } catch { /* ignore */ }
       throw new Error(msg);
     }
 
-    const arrayBuffer = await resp.arrayBuffer();
+    const arrayBuffer = resp.arrayBuffer;
 
     // Decode WAV using Web Audio API (available in Electron)
     const audioCtx = new AudioContext();

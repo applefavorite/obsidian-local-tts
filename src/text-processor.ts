@@ -111,7 +111,7 @@ function cleanLine(line: string, settings: LocalTTSSettings): string {
 
   // 移除标签 #tag
   if (settings.skipTags) {
-    text = text.replace(/(^|\s)#[a-zA-Z0-9_/\-]+/g, " ");
+    text = text.replace(/(^|\s)#[a-zA-Z0-9_/-]+/g, " ");
   }
 
   // 清理格式标记（保留内容）

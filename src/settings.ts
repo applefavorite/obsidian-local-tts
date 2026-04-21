@@ -1,4 +1,4 @@
-import { App, Notice, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting, requestUrl } from "obsidian";
 import { AVAILABLE_VOICES, LocalTTSSettings } from "./types";
 import type LocalTTSPlugin from "./main";
 
@@ -17,10 +17,10 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Local TTS Settings" });
+    new Setting(containerEl).setName("Local TTS settings").setHeading();
 
     // ─── 第一组: TTS 服务器 ───────────────────────────────────────────
-    containerEl.createEl("h3", { text: "TTS Server" });
+    new Setting(containerEl).setName("TTS server").setHeading();
 
     containerEl.createEl("p", {
       text: "The plugin runs a local Node.js server to do TTS inference outside of Electron's renderer. The server downloads the Kokoro model (~90 MB) on first start.",
@@ -29,26 +29,26 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
     // ─── Dependencies ─────────────────────────────────────────────────────
     const depsSetting = new Setting(containerEl)
-      .setName("Server Dependencies")
+      .setName("Server dependencies")
       .setDesc("kokoro-js must be installed in server/node_modules/ for TTS to work.");
 
     this.depsStatusEl = depsSetting.settingEl.createDiv({ cls: "local-tts-server-status" });
     this.updateDepsStatus();
 
     depsSetting.addButton((btn) => {
-      btn.setButtonText("Install Dependencies").onClick(async () => {
+      btn.setButtonText("Install dependencies").onClick(async () => {
         btn.setDisabled(true);
         btn.setButtonText("Installing…");
         await this.plugin.installServerDeps();
         this.updateDepsStatus();
         btn.setDisabled(false);
-        btn.setButtonText("Install Dependencies");
+        btn.setButtonText("Install dependencies");
       });
     });
 
     // Server Status
     const statusSetting = new Setting(containerEl)
-      .setName("Server Status")
+      .setName("Server status")
       .setDesc("Real-time status of the local TTS server");
 
     this.serverStatusEl = statusSetting.settingEl.createDiv({
@@ -58,15 +58,15 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
     // Refresh button
     statusSetting.addButton((btn) =>
-      btn.setButtonText("Refresh").onClick(() => this.updateServerStatus())
+      btn.setButtonText("Refresh").onClick(() => { void this.updateServerStatus(); })
     );
 
     // Start / Stop buttons
     new Setting(containerEl)
-      .setName("Server Control")
+      .setName("Server control")
       .setDesc("Start or stop the local TTS server process")
       .addButton((btn) => {
-        btn.setButtonText("Start Server").setCta().onClick(async () => {
+        btn.setButtonText("Start server").setCta().onClick(async () => {
           btn.setDisabled(true);
           await this.plugin.startServer();
           setTimeout(() => {
@@ -76,15 +76,15 @@ export class LocalTTSSettingTab extends PluginSettingTab {
         });
       })
       .addButton((btn) => {
-        btn.setButtonText("Stop Server").setWarning().onClick(() => {
+        btn.setButtonText("Stop server").setWarning().onClick(() => {
           this.plugin.stopServer();
-          setTimeout(() => this.updateServerStatus(), 500);
+          setTimeout(() => { void this.updateServerStatus(); }, 500);
         });
       });
 
     // Server Port
     new Setting(containerEl)
-      .setName("Server Port")
+      .setName("Server port")
       .setDesc("Port for the local TTS HTTP server (default: 19199)")
       .addText((text) => {
         text
@@ -102,7 +102,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
     // Node.js Path
     new Setting(containerEl)
-      .setName("Node.js Path")
+      .setName("Node.js path")
       .setDesc('Path to the node executable. Leave empty for auto-detect (uses login shell "which node").')
       .addText((text) => {
         text
@@ -143,7 +143,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
     // Model dtype
     new Setting(containerEl)
-      .setName("Model Quantization")
+      .setName("Model quantization")
       .setDesc("q8: ~90 MB (recommended) | q4: ~50 MB (faster) | fp32: ~330 MB (best quality)")
       .addDropdown((dd) => {
         dd.addOption("q8", "q8 — ~90 MB (recommended)");
@@ -158,7 +158,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       });
 
     // ─── 第二组: 声音 & 播放 ─────────────────────────────────────────
-    containerEl.createEl("h3", { text: "Voice & Playback" });
+    new Setting(containerEl).setName("Voice & playback").setHeading();
 
     new Setting(containerEl)
       .setName("Voice")
@@ -225,7 +225,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       });
 
     // ─── 第三组: 内容过滤 ─────────────────────────────────────────────
-    containerEl.createEl("h3", { text: "Content Filtering" });
+    new Setting(containerEl).setName("Content filtering").setHeading();
 
     const toggleSettings: Array<{ key: keyof LocalTTSSettings; name: string; desc: string }> = [
       { key: "skipCodeBlocks", name: "Skip code blocks", desc: "Don't read code blocks and inline code" },
@@ -262,7 +262,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
   private startStatusPolling(): void {
     this.stopStatusPolling();
-    this.statusPollTimer = window.setInterval(() => this.updateServerStatus(), 3000);
+    this.statusPollTimer = window.setInterval(() => { void this.updateServerStatus(); }, 3000);
   }
 
   private stopStatusPolling(): void {
@@ -278,7 +278,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       this.depsStatusEl.textContent = "✅ Dependencies installed";
       this.depsStatusEl.className = "local-tts-server-status status-ready";
     } else {
-      this.depsStatusEl.textContent = "❌ Missing — click Install Dependencies";
+      this.depsStatusEl.textContent = "❌ Missing — click Install dependencies";
       this.depsStatusEl.className = "local-tts-server-status status-error";
     }
   }
@@ -287,10 +287,8 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     if (!this.serverStatusEl) return;
     const port = this.plugin.settings.serverPort;
     try {
-      const resp = await fetch(`http://127.0.0.1:${port}/status`, {
-        signal: AbortSignal.timeout(2000),
-      });
-      const data = await resp.json() as { status: string; error?: string };
+      const resp = await requestUrl({ url: `http://127.0.0.1:${port}/status` });
+      const data = resp.json as { status: string; error?: string };
       if (data.status === "ready") {
         this.serverStatusEl.textContent = "✅ Running — model ready";
         this.serverStatusEl.className = "local-tts-server-status status-ready";

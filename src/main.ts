@@ -6,6 +6,10 @@ import {
   Plugin,
   TFile,
 } from "obsidian";
+import type { ChildProcess } from "child_process";
+import * as childProcess from "child_process";
+import * as fs from "fs";
+import * as nodePath from "path";
 import { BookmarkData, DEFAULT_SETTINGS, PlaybackState, SentenceInfo } from "./types";
 import { processMarkdown } from "./text-processor";
 import { TTSEngine } from "./tts-engine";
@@ -14,14 +18,6 @@ import { HighlightManager, highlightField } from "./highlight-manager";
 import { PlaybackView } from "./playback-view";
 import { LocalTTSSettingTab } from "./settings";
 import { BookmarkListModal, ReadStartModal } from "./bookmark-modal";
-
-// Electron/Node.js built-ins — available via require() at runtime in Obsidian
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const childProcess = (global as any).require?.("child_process") ?? require("child_process");
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fs = (global as any).require?.("fs") ?? require("fs");
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const nodePath = (global as any).require?.("path") ?? require("path");
 
 const SPEED_STEPS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
@@ -49,8 +45,7 @@ export default class LocalTTSPlugin extends Plugin {
   private audioCache = new Map<number, { audio: Float32Array; sampleRate: number }>();
   private prefetchingIndices = new Set<number>();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private serverProcess: any = null;
+  private serverProcess: ChildProcess | null = null;
 
   // ─── Plugin lifecycle ──────────────────────────────────────────────────────
 
@@ -77,13 +72,13 @@ export default class LocalTTSPlugin extends Plugin {
       switch (action) {
         case "play":             this.togglePlayPause(); break;
         case "stop":             this.stopPlayback(); break;
-        case "next":             this.nextSentence(); break;
-        case "prev":             this.prevSentence(); break;
+        case "next":             void this.nextSentence(); break;
+        case "prev":             void this.prevSentence(); break;
         case "speed":            this.cycleSpeed(); break;
         case "bookmark-toggle":  this.handleBookmarkToggle(); break;
         case "bookmark-clear":   this.handleBookmarkClear(); break;
         case "bookmark-list":    new BookmarkListModal(this).open(); break;
-        case "bookmark-resume":  this.resumeCurrentNote(); break;
+        case "bookmark-resume":  void this.resumeCurrentNote(); break;
       }
     });
 
@@ -96,7 +91,6 @@ export default class LocalTTSPlugin extends Plugin {
     this.addCommand({
       id: "read-current-note",
       name: "Read current note",
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "L" }],
       callback: () => this.readCurrentNote(),
     });
     this.addCommand({
@@ -106,20 +100,17 @@ export default class LocalTTSPlugin extends Plugin {
     });
     this.addCommand({
       id: "pause-resume",
-      name: "Pause / Resume",
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "P" }],
+      name: "Pause / resume",
       callback: () => this.togglePlayPause(),
     });
     this.addCommand({
       id: "stop",
       name: "Stop reading",
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "S" }],
       callback: () => this.stopPlayback(),
     });
     this.addCommand({
       id: "resume-reading",
       name: "Resume reading from bookmark",
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "R" }],
       callback: () => this.resumeCurrentNote(),
     });
     this.addCommand({
@@ -170,7 +161,7 @@ export default class LocalTTSPlugin extends Plugin {
         if (file && this.settings.bookmarks[file.path]) {
           menu.addItem((item) =>
             item.setTitle("Resume reading from bookmark").setIcon("bookmark")
-              .onClick(() => this.resumeCurrentNote())
+              .onClick(() => { void this.resumeCurrentNote(); })
           );
         }
       })
@@ -183,7 +174,7 @@ export default class LocalTTSPlugin extends Plugin {
     if (this.settings.autoStartServer) {
       setTimeout(async () => {
         await this.checkAndInstallServerDeps();
-        this.startServer();
+        await this.startServer();
       }, 1500);
     }
   }
@@ -232,7 +223,7 @@ export default class LocalTTSPlugin extends Plugin {
       timestamp: Date.now(),
       sentencePreview: preview,
     };
-    this.saveSettings();
+    void this.saveSettings();
     this.playbackView?.setBookmarkState(true);
     this.updateResumeButton();
   }
@@ -240,7 +231,7 @@ export default class LocalTTSPlugin extends Plugin {
   clearBookmark(filePath: string): void {
     if (this.settings.bookmarks[filePath]) {
       delete this.settings.bookmarks[filePath];
-      this.saveSettings();
+      void this.saveSettings();
       if (this.playbackState.sourceFile === filePath) {
         this.playbackView?.setBookmarkState(false);
       }
@@ -308,7 +299,7 @@ export default class LocalTTSPlugin extends Plugin {
     if (!bm) return;
 
     this.audioPlayer.stop();
-    this.playSentenceAt(bm.sentenceIndex);
+    void this.playSentenceAt(bm.sentenceIndex);
   }
 
   /** Open a file and start reading from the given bookmark. */
@@ -332,7 +323,7 @@ export default class LocalTTSPlugin extends Plugin {
   serverDepsInstalled(): boolean {
     try {
       const basePath = (this.app.vault.adapter as unknown as { getBasePath(): string }).getBasePath();
-      const kokoroPath = nodePath.join(basePath, this.manifest.dir, "server", "node_modules", "kokoro-js");
+      const kokoroPath = nodePath.join(basePath, this.manifest.dir ?? "", "server", "node_modules", "kokoro-js");
       return fs.existsSync(kokoroPath);
     } catch {
       return false;
@@ -344,14 +335,14 @@ export default class LocalTTSPlugin extends Plugin {
     return new Promise((resolve) => {
       try {
         const basePath = (this.app.vault.adapter as unknown as { getBasePath(): string }).getBasePath();
-        const serverDir = nodePath.join(basePath, this.manifest.dir, "server");
+        const serverDir = nodePath.join(basePath, this.manifest.dir ?? "", "server");
         const proc = childProcess.spawn(
           "/bin/zsh",
           ["-l", "-c", `npm install --prefix "${serverDir}"`],
           { stdio: ["ignore", "pipe", "pipe"], detached: false }
         );
-        proc.stdout?.on("data", (d: Buffer) => console.log("[LocalTTS deps]", d.toString().trimEnd()));
-        proc.stderr?.on("data", (d: Buffer) => console.log("[LocalTTS deps]", d.toString().trimEnd()));
+        proc.stdout?.on("data", (d: Buffer) => console.debug("[LocalTTS deps]", d.toString().trimEnd()));
+        proc.stderr?.on("data", (d: Buffer) => console.debug("[LocalTTS deps]", d.toString().trimEnd()));
         proc.on("close", (code: number | null) => {
           if (code === 0) {
             new Notice("Local TTS: server dependencies installed ✅");
@@ -373,7 +364,7 @@ export default class LocalTTSPlugin extends Plugin {
 
   private async checkAndInstallServerDeps(): Promise<void> {
     if (this.serverDepsInstalled()) return;
-    console.log("[LocalTTS] server/node_modules/kokoro-js not found — running npm install…");
+    console.debug("[LocalTTS] server/node_modules/kokoro-js not found — running npm install…");
     new Notice("Local TTS: installing server dependencies (kokoro-js)…", 5000);
     await this.installServerDeps();
   }
@@ -384,7 +375,7 @@ export default class LocalTTSPlugin extends Plugin {
     if (this.serverProcess && !this.serverProcess.killed) return;
 
     const basePath = (this.app.vault.adapter as unknown as { getBasePath(): string }).getBasePath();
-    const serverScript = nodePath.join(basePath, this.manifest.dir, "server", "tts-server.mjs");
+    const serverScript = nodePath.join(basePath, this.manifest.dir ?? "", "server", "tts-server.mjs");
 
     if (!fs.existsSync(serverScript)) {
       new Notice(`TTS server script not found:\n${serverScript}`, 8000);
@@ -396,7 +387,7 @@ export default class LocalTTSPlugin extends Plugin {
     const modelId = this.settings.modelId;
     const dtype = this.settings.modelDtype;
 
-    console.log(`[LocalTTS] Starting: ${nodeExec} ${serverScript} ${port}`);
+    console.debug(`[LocalTTS] Starting: ${nodeExec} ${serverScript} ${port}`);
 
     this.serverProcess = childProcess.spawn(
       nodeExec,
@@ -405,7 +396,7 @@ export default class LocalTTSPlugin extends Plugin {
     );
 
     this.serverProcess.stdout?.on("data", (d: Buffer) =>
-      console.log("[TTS Server]", d.toString().trimEnd())
+      console.debug("[TTS Server]", d.toString().trimEnd())
     );
     this.serverProcess.stderr?.on("data", (d: Buffer) =>
       console.error("[TTS Server]", d.toString().trimEnd())
@@ -415,7 +406,7 @@ export default class LocalTTSPlugin extends Plugin {
       this.serverProcess = null;
     });
     this.serverProcess.on("exit", (code: number | null) => {
-      console.log(`[TTS Server] Exited (code=${code})`);
+      console.debug(`[TTS Server] Exited (code=${code})`);
       this.serverProcess = null;
       this.ttsEngine.dispose();
     });
@@ -521,7 +512,7 @@ export default class LocalTTSPlugin extends Plugin {
     }
 
     new ReadStartModal(this.app, options, (startIndex) => {
-      this.startReading(content, filePath, startIndex);
+      void this.startReading(content, filePath, startIndex);
     }).open();
   }
 
@@ -591,7 +582,7 @@ export default class LocalTTSPlugin extends Plugin {
     const sentence = this.sentences[index];
     this.currentIndex = index;
 
-    console.log(`[LocalTTS] Playing ${index + 1}/${this.sentences.length}`);
+    console.debug(`[LocalTTS] Playing ${index + 1}/${this.sentences.length}`);
 
     this.playbackState.currentSentenceIndex = index;
     this.playbackState.currentText = sentence.text;
@@ -628,7 +619,7 @@ export default class LocalTTSPlugin extends Plugin {
     if (this.abortController?.signal.aborted) return;
     const next = this.currentIndex + 1;
     if (next >= this.sentences.length) this.onReadingComplete();
-    else this.playSentenceAt(next);
+    else void this.playSentenceAt(next);
   }
 
   private onReadingComplete(): void {
@@ -722,7 +713,7 @@ export default class LocalTTSPlugin extends Plugin {
     const idx = SPEED_STEPS.findIndex((s) => Math.abs(s - this.settings.speed) < 0.01);
     const next = SPEED_STEPS[(idx + 1) % SPEED_STEPS.length];
     this.settings.speed = next;
-    this.saveSettings();
+    void this.saveSettings();
     this.playbackView?.updateSpeed(next);
     new Notice(`Speed: ${next}x`);
   }
@@ -730,7 +721,7 @@ export default class LocalTTSPlugin extends Plugin {
   adjustSpeed(delta: number): void {
     const next = Math.max(0.5, Math.min(2.0, this.settings.speed + delta));
     this.settings.speed = next;
-    this.saveSettings();
+    void this.saveSettings();
     this.playbackView?.updateSpeed(next);
     new Notice(`Speed: ${next.toFixed(2)}x`);
   }

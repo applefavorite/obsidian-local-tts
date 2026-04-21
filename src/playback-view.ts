@@ -39,7 +39,7 @@ export class PlaybackView {
     // ── Playback bar ──────────────────────────────────────────────────
     this.playbackEl = playbackItem;
     this.playbackEl.addClass("local-tts-status-bar");
-    this.playbackEl.style.display = "none";
+    this.playbackEl.addClass("local-tts-hidden");
 
     this.prevBtn      = this.mkBtn(this.playbackEl, "⏮", "Previous sentence");
     this.playPauseBtn = this.mkBtn(this.playbackEl, "▶",  "Play / Pause");
@@ -91,7 +91,7 @@ export class PlaybackView {
     // ── Static resume pill (idle state) ──────────────────────────────
     this.resumeEl = resumeItem;
     this.resumeEl.addClass("local-tts-resume-pill");
-    this.resumeEl.style.display = "none";
+    this.resumeEl.addClass("local-tts-hidden");
     this.resumeEl.setText("🔖 Resume");
     this.resumeEl.title = "Resume reading from bookmark";
     this.resumeEl.addEventListener("click", () => this.actionCallback?.("bookmark-resume"));
@@ -145,23 +145,27 @@ export class PlaybackView {
    * Automatically hidden when the playback bar is shown.
    */
   setResumeVisible(visible: boolean): void {
-    this.resumeEl.style.display = visible ? "inline-flex" : "none";
+    if (visible) {
+      this.resumeEl.removeClass("local-tts-hidden");
+    } else {
+      this.resumeEl.addClass("local-tts-hidden");
+    }
   }
 
   // ─── Visibility ───────────────────────────────────────────────────────────
 
   private showPlayback(): void {
     if (!this.visible) {
-      this.playbackEl.style.display = "flex";
+      this.playbackEl.removeClass("local-tts-hidden");
       this.visible = true;
     }
     // Hide resume pill while playback bar is active
-    this.resumeEl.style.display = "none";
+    this.resumeEl.addClass("local-tts-hidden");
   }
 
   private hidePlayback(): void {
     if (this.visible) {
-      this.playbackEl.style.display = "none";
+      this.playbackEl.addClass("local-tts-hidden");
       this.visible = false;
     }
   }

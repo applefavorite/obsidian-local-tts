@@ -1,5 +1,4 @@
-import { App, Modal, SuggestModal, TFile } from "obsidian";
-import { BookmarkData } from "./types";
+import { App, Modal, SuggestModal } from "obsidian";
 import type LocalTTSPlugin from "./main";
 
 // ─── 朗读起点选择 Modal ──────────────────────────────────────────────────────
@@ -45,7 +44,7 @@ export class BookmarkListModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("local-tts-bookmark-modal");
-    contentEl.createEl("h2", { text: "🔖 Reading Bookmarks" });
+    contentEl.createEl("h2", { text: "🔖 Reading bookmarks" });
 
     const bookmarks = this.plugin.settings.bookmarks;
     const entries = Object.entries(bookmarks).sort(
@@ -80,24 +79,25 @@ export class BookmarkListModal extends Modal {
       const actions = item.createDiv({ cls: "local-tts-bookmark-actions" });
 
       const resumeBtn = actions.createEl("button", { text: "Resume", cls: "mod-cta" });
-      resumeBtn.addEventListener("click", async () => {
+      resumeBtn.addEventListener("click", () => {
         this.close();
-        await this.plugin.openAndResumeFromBookmark(filePath, bm);
+        void this.plugin.openAndResumeFromBookmark(filePath, bm);
       });
 
       const delBtn = actions.createEl("button", { text: "✕" });
       delBtn.title = "Delete bookmark";
-      delBtn.addEventListener("click", async () => {
+      delBtn.addEventListener("click", () => {
         delete this.plugin.settings.bookmarks[filePath];
-        await this.plugin.saveSettings();
-        item.remove();
-        if (Object.keys(this.plugin.settings.bookmarks).length === 0) {
-          list.remove();
-          contentEl.createEl("p", {
-            text: "No bookmarks.",
-            cls: "setting-item-description",
-          });
-        }
+        void this.plugin.saveSettings().then(() => {
+          item.remove();
+          if (Object.keys(this.plugin.settings.bookmarks).length === 0) {
+            list.remove();
+            contentEl.createEl("p", {
+              text: "No bookmarks.",
+              cls: "setting-item-description",
+            });
+          }
+        });
       });
     }
   }

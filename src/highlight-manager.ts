@@ -45,7 +45,6 @@ export class HighlightManager {
   private getEditorView(): EditorView | null {
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!view) return null;
-    // @ts-ignore — Obsidian internal: editor.cm is the CodeMirror 6 EditorView
     const cmView = (view.editor as unknown as { cm: EditorView }).cm;
     return cmView ?? null;
   }

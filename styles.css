@@ -5,6 +5,11 @@
   transition: background-color 0.2s ease;
 }
 
+/* ─── 可见性工具类 ────────────────────────────────────────────────── */
+.local-tts-hidden {
+  display: none !important;
+}
+
 /* ─── 状态栏控制条 ────────────────────────────────────────────────── */
 .local-tts-status-bar {
   display: flex;
