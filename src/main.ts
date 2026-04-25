@@ -172,9 +172,11 @@ export default class LocalTTSPlugin extends Plugin {
 
     // Auto-install server deps if missing, then auto-start server
     if (this.settings.autoStartServer) {
-      setTimeout(async () => {
-        await this.checkAndInstallServerDeps();
-        await this.startServer();
+      setTimeout(() => {
+        void (async () => {
+          await this.checkAndInstallServerDeps();
+          await this.startServer();
+        })();
       }, 1500);
     }
   }
@@ -536,7 +538,7 @@ export default class LocalTTSPlugin extends Plugin {
     await this.ttsEngine.initialize();
     if (!this.ttsEngine.ready) {
       new Notice(
-        "TTS server is not ready. Start it in Settings → Local TTS → Start Server.",
+        "TTS server is not ready. Start it in Settings → Local TTS → Start server.",
         6000
       );
       return;

@@ -17,7 +17,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl).setName("Local TTS settings").setHeading();
+    new Setting(containerEl).setName("Local TTS").setHeading();
 
     // ─── 第一组: TTS 服务器 ───────────────────────────────────────────
     new Setting(containerEl).setName("TTS server").setHeading();
@@ -54,7 +54,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     this.serverStatusEl = statusSetting.settingEl.createDiv({
       cls: "local-tts-server-status",
     });
-    this.updateServerStatus();
+    void this.updateServerStatus();
 
     // Refresh button
     statusSetting.addButton((btn) =>
@@ -71,7 +71,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
           await this.plugin.startServer();
           setTimeout(() => {
             btn.setDisabled(false);
-            this.updateServerStatus();
+            void this.updateServerStatus();
           }, 1500);
         });
       })

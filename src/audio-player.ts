@@ -69,7 +69,7 @@ export class AudioPlayer {
   pause(): void {
     if (!this._isPlaying || this._isPaused) return;
     if (this.audioContext && this.audioContext.state === "running") {
-      this.audioContext.suspend();
+      void this.audioContext.suspend();
       this._isPaused = true;
     }
   }
@@ -80,7 +80,7 @@ export class AudioPlayer {
   resume(): void {
     if (!this._isPaused) return;
     if (this.audioContext && this.audioContext.state === "suspended") {
-      this.audioContext.resume();
+      void this.audioContext.resume();
       this._isPaused = false;
     }
   }
@@ -131,7 +131,7 @@ export class AudioPlayer {
   dispose(): void {
     this.stop();
     if (this.audioContext) {
-      this.audioContext.close();
+      void this.audioContext.close();
       this.audioContext = null;
     }
     this.gainNode = null;
