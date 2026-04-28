@@ -42,7 +42,7 @@ export class PlaybackView {
     this.playbackEl.addClass("local-tts-hidden");
 
     this.prevBtn      = this.mkBtn(this.playbackEl, "⏮", "Previous sentence");
-    this.playPauseBtn = this.mkBtn(this.playbackEl, "▶",  "Play / Pause");
+    this.playPauseBtn = this.mkBtn(this.playbackEl, "▶",  "Play / pause");
     this.nextBtn      = this.mkBtn(this.playbackEl, "⏭", "Next sentence");
     this.stopBtn      = this.mkBtn(this.playbackEl, "⏹", "Stop");
 

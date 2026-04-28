@@ -62,7 +62,7 @@ export default class LocalTTSPlugin extends Plugin {
     this.ttsEngine.updatePort(this.settings.serverPort);
 
     // Ribbon
-    this.addRibbonIcon("volume-2", "Read current note aloud", () => this.readCurrentNote());
+    this.addRibbonIcon("volume-2", "Read current note aloud", () => { void this.readCurrentNote(); });
 
     // Status bar — two items: playback controls + idle resume pill
     const statusBarItem = this.addStatusBarItem();
@@ -91,12 +91,12 @@ export default class LocalTTSPlugin extends Plugin {
     this.addCommand({
       id: "read-current-note",
       name: "Read current note",
-      callback: () => this.readCurrentNote(),
+      callback: () => { void this.readCurrentNote(); },
     });
     this.addCommand({
       id: "read-selected-text",
       name: "Read selected text",
-      editorCallback: (editor: Editor) => this.readSelectedText(editor),
+      editorCallback: (editor: Editor) => { void this.readSelectedText(editor); },
     });
     this.addCommand({
       id: "pause-resume",
@@ -111,7 +111,7 @@ export default class LocalTTSPlugin extends Plugin {
     this.addCommand({
       id: "resume-reading",
       name: "Resume reading from bookmark",
-      callback: () => this.resumeCurrentNote(),
+      callback: () => { void this.resumeCurrentNote(); },
     });
     this.addCommand({
       id: "clear-bookmark",
@@ -126,12 +126,12 @@ export default class LocalTTSPlugin extends Plugin {
     this.addCommand({
       id: "next-sentence",
       name: "Next sentence",
-      callback: () => this.nextSentence(),
+      callback: () => { void this.nextSentence(); },
     });
     this.addCommand({
       id: "prev-sentence",
       name: "Previous sentence",
-      callback: () => this.prevSentence(),
+      callback: () => { void this.prevSentence(); },
     });
     this.addCommand({
       id: "speed-up",
