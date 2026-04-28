@@ -25,8 +25,8 @@ export class ReadStartModal extends SuggestModal<ReadOption> {
   }
 
   renderSuggestion(option: ReadOption, el: HTMLElement): void {
-    el.createEl("div", { text: option.label, cls: "suggestion-title" });
-    el.createEl("div", { text: option.description, cls: "suggestion-note" });
+    el.createDiv({ text: option.label, cls: "suggestion-title" });
+    el.createDiv({ text: option.description, cls: "suggestion-note" });
   }
 
   onChooseSuggestion(option: ReadOption): void {
@@ -66,12 +66,12 @@ export class BookmarkListModal extends Modal {
 
       const info = item.createDiv({ cls: "local-tts-bookmark-info" });
       const fileName = filePath.split("/").pop()?.replace(/\.md$/, "") ?? filePath;
-      info.createEl("div", { text: fileName, cls: "local-tts-bookmark-filename" });
-      info.createEl("div", {
+      info.createDiv({ text: fileName, cls: "local-tts-bookmark-filename" });
+      info.createDiv({
         text: `Sentence ${bm.sentenceIndex + 1}: "${bm.sentencePreview}"`,
         cls: "local-tts-bookmark-preview",
       });
-      info.createEl("div", {
+      info.createDiv({
         text: formatTimestamp(bm.timestamp),
         cls: "local-tts-bookmark-time",
       });

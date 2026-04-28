@@ -10,7 +10,7 @@ import type { ChildProcess } from "child_process";
 import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as nodePath from "path";
-import { BookmarkData, DEFAULT_SETTINGS, PlaybackState, SentenceInfo } from "./types";
+import { BookmarkData, DEFAULT_SETTINGS, LocalTTSSettings, PlaybackState, SentenceInfo } from "./types";
 import { processMarkdown } from "./text-processor";
 import { TTSEngine } from "./tts-engine";
 import { AudioPlayer } from "./audio-player";
@@ -53,7 +53,7 @@ export default class LocalTTSPlugin extends Plugin {
     this.highlightManager = new HighlightManager(this.app);
     await this.loadSettings();
 
-    document.documentElement.style.setProperty(
+    activeDocument.documentElement.style.setProperty(
       "--local-tts-highlight-color",
       this.settings.highlightColor
     );
@@ -172,7 +172,7 @@ export default class LocalTTSPlugin extends Plugin {
 
     // Auto-install server deps if missing, then auto-start server
     if (this.settings.autoStartServer) {
-      setTimeout(() => {
+      activeWindow.setTimeout(() => {
         void (async () => {
           await this.checkAndInstallServerDeps();
           await this.startServer();
@@ -195,11 +195,11 @@ export default class LocalTTSPlugin extends Plugin {
     this.ttsEngine.dispose();
     this.audioPlayer.dispose();
     this.playbackView?.destroy();
-    document.documentElement.style.removeProperty("--local-tts-highlight-color");
+    activeDocument.documentElement.style.removeProperty("--local-tts-highlight-color");
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<LocalTTSSettings>);
     // Ensure bookmarks is always an object (safety for old data)
     if (!this.settings.bookmarks) this.settings.bookmarks = {};
   }
@@ -285,7 +285,7 @@ export default class LocalTTSPlugin extends Plugin {
 
     const bm = this.settings.bookmarks[view.file.path];
     if (!bm) {
-      new Notice("No bookmark saved for this note. Use 'Read current note' to start reading.");
+      new Notice("No bookmark saved for this note. Use 'read current note' to start reading.");
       return;
     }
 
@@ -314,7 +314,7 @@ export default class LocalTTSPlugin extends Plugin {
     const leaf = this.app.workspace.getLeaf(false);
     await leaf.openFile(file);
     // Wait for editor to settle
-    await new Promise((r) => setTimeout(r, 350));
+    await new Promise((r) => activeWindow.setTimeout(r, 350));
     const content = await this.app.vault.read(file);
     await this.startReading(content, filePath, bm.sentenceIndex);
   }
@@ -347,6 +347,7 @@ export default class LocalTTSPlugin extends Plugin {
         proc.stderr?.on("data", (d: Buffer) => console.debug("[LocalTTS deps]", d.toString().trimEnd()));
         proc.on("close", (code: number | null) => {
           if (code === 0) {
+            // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
             new Notice("Local TTS: server dependencies installed ✅");
           } else {
             new Notice(`Local TTS: npm install failed (code=${code}). Check console.`, 6000);
@@ -367,6 +368,7 @@ export default class LocalTTSPlugin extends Plugin {
   private async checkAndInstallServerDeps(): Promise<void> {
     if (this.serverDepsInstalled()) return;
     console.debug("[LocalTTS] server/node_modules/kokoro-js not found — running npm install…");
+    // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
     new Notice("Local TTS: installing server dependencies (kokoro-js)…", 5000);
     await this.installServerDeps();
   }
@@ -414,6 +416,7 @@ export default class LocalTTSPlugin extends Plugin {
     });
 
     this.ttsEngine.updatePort(this.settings.serverPort);
+    // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
     new Notice("TTS server starting… (model download ~90 MB on first run)", 4000);
   }
 
@@ -538,6 +541,7 @@ export default class LocalTTSPlugin extends Plugin {
     await this.ttsEngine.initialize();
     if (!this.ttsEngine.ready) {
       new Notice(
+        // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
         "TTS server is not ready. Start it in Settings → Local TTS → Start server.",
         6000
       );

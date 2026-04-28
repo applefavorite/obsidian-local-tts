@@ -57,7 +57,7 @@ export class TTSEngine {
         // Server not yet reachable — still starting
         onProgress?.("connecting");
       }
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => activeWindow.setTimeout(r, 2000));
     }
     throw new Error("TTS server did not become ready within the timeout.");
   }

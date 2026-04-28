@@ -48,7 +48,7 @@ export class PlaybackView {
 
     this.playbackEl.createSpan({ cls: "local-tts-separator", text: " | " });
 
-    this.speedBtn = this.playbackEl.createEl("span", {
+    this.speedBtn = this.playbackEl.createSpan({
       cls: "local-tts-speed-btn",
       text: "1.0x",
     });
@@ -61,7 +61,7 @@ export class PlaybackView {
     this.playbackEl.createSpan({ cls: "local-tts-separator", text: " | " });
 
     // 🔖 bookmark button
-    this.bookmarkBtn = this.playbackEl.createEl("span", {
+    this.bookmarkBtn = this.playbackEl.createSpan({
       cls: "local-tts-btn local-tts-bookmark-btn",
       text: "🔖",
     });
@@ -75,7 +75,7 @@ export class PlaybackView {
     this.playbackEl.createSpan({ cls: "local-tts-separator", text: " " });
 
     // 📋 bookmark list button
-    this.bookmarkListBtn = this.playbackEl.createEl("span", {
+    this.bookmarkListBtn = this.playbackEl.createSpan({
       cls: "local-tts-btn local-tts-bookmark-list-btn",
       text: "📋",
     });
@@ -98,7 +98,7 @@ export class PlaybackView {
   }
 
   private mkBtn(parent: HTMLElement, icon: string, title: string): HTMLElement {
-    const btn = parent.createEl("span", { cls: "local-tts-btn", text: icon });
+    const btn = parent.createSpan({ cls: "local-tts-btn", text: icon });
     btn.title = title;
     return btn;
   }

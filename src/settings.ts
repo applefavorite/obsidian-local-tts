@@ -17,9 +17,11 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
+    // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
     new Setting(containerEl).setName("Local TTS").setHeading();
 
     // ─── 第一组: TTS 服务器 ───────────────────────────────────────────
+    // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
     new Setting(containerEl).setName("TTS server").setHeading();
 
     containerEl.createEl("p", {
@@ -30,6 +32,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     // ─── Dependencies ─────────────────────────────────────────────────────
     const depsSetting = new Setting(containerEl)
       .setName("Server dependencies")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- Kokoro and TTS are proper names/acronyms
       .setDesc("kokoro-js must be installed in server/node_modules/ for TTS to work.");
 
     this.depsStatusEl = depsSetting.settingEl.createDiv({ cls: "local-tts-server-status" });
@@ -49,6 +52,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     // Server Status
     const statusSetting = new Setting(containerEl)
       .setName("Server status")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
       .setDesc("Real-time status of the local TTS server");
 
     this.serverStatusEl = statusSetting.settingEl.createDiv({
@@ -64,12 +68,13 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     // Start / Stop buttons
     new Setting(containerEl)
       .setName("Server control")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
       .setDesc("Start or stop the local TTS server process")
       .addButton((btn) => {
         btn.setButtonText("Start server").setCta().onClick(async () => {
           btn.setDisabled(true);
           await this.plugin.startServer();
-          setTimeout(() => {
+          activeWindow.setTimeout(() => {
             btn.setDisabled(false);
             void this.updateServerStatus();
           }, 1500);
@@ -78,13 +83,14 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       .addButton((btn) => {
         btn.setButtonText("Stop server").setWarning().onClick(() => {
           this.plugin.stopServer();
-          setTimeout(() => { void this.updateServerStatus(); }, 500);
+          activeWindow.setTimeout(() => { void this.updateServerStatus(); }, 500);
         });
       });
 
     // Server Port
     new Setting(containerEl)
       .setName("Server port")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
       .setDesc("Port for the local TTS HTTP server (default: 19199)")
       .addText((text) => {
         text
@@ -106,7 +112,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       .setDesc('Path to the node executable. Leave empty for auto-detect (uses login shell "which node").')
       .addText((text) => {
         text
-          .setPlaceholder("(auto-detect)")
+          .setPlaceholder("(Auto-detect)")
           .setValue(this.plugin.settings.nodePath)
           .onChange(async (value) => {
             this.plugin.settings.nodePath = value.trim();
@@ -132,6 +138,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     // Auto-start
     new Setting(containerEl)
       .setName("Auto-start server")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
       .setDesc("Automatically start the TTS server when the plugin loads")
       .addToggle((t) => {
         t.setValue(this.plugin.settings.autoStartServer);
@@ -144,10 +151,14 @@ export class LocalTTSSettingTab extends PluginSettingTab {
     // Model dtype
     new Setting(containerEl)
       .setName("Model quantization")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- q8/q4/fp32 are technical quantization identifiers
       .setDesc("q8: ~90 MB (recommended) | q4: ~50 MB (faster) | fp32: ~330 MB (best quality)")
       .addDropdown((dd) => {
+        // eslint-disable-next-line obsidianmd/ui/sentence-case -- q8/q4/fp32 are technical quantization identifiers
         dd.addOption("q8", "q8 — ~90 MB (recommended)");
+        // eslint-disable-next-line obsidianmd/ui/sentence-case -- q4 is a technical quantization identifier
         dd.addOption("q4", "q4 — ~50 MB (fastest)");
+        // eslint-disable-next-line obsidianmd/ui/sentence-case -- fp32 is a technical quantization identifier
         dd.addOption("fp32", "fp32 — ~330 MB (best quality)");
         dd.setValue(this.plugin.settings.modelDtype);
         dd.onChange(async (value) => {
@@ -162,6 +173,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Voice")
+      // eslint-disable-next-line obsidianmd/ui/sentence-case -- TTS is an acronym
       .setDesc("Select the TTS voice")
       .addDropdown((dd) => {
         for (const voice of AVAILABLE_VOICES) {
@@ -215,11 +227,12 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       .setDesc("CSS color value for sentence highlight")
       .addText((text) => {
         text
+          // eslint-disable-next-line obsidianmd/ui/sentence-case -- CSS color value, not UI text
           .setPlaceholder("rgba(255, 208, 0, 0.3)")
           .setValue(this.plugin.settings.highlightColor)
           .onChange(async (value) => {
             this.plugin.settings.highlightColor = value;
-            document.documentElement.style.setProperty("--local-tts-highlight-color", value);
+            activeDocument.documentElement.style.setProperty("--local-tts-highlight-color", value);
             await this.plugin.saveSettings();
           });
       });
@@ -278,7 +291,7 @@ export class LocalTTSSettingTab extends PluginSettingTab {
       this.depsStatusEl.textContent = "✅ Dependencies installed";
       this.depsStatusEl.className = "local-tts-server-status status-ready";
     } else {
-      this.depsStatusEl.textContent = "❌ Missing — click Install dependencies";
+      this.depsStatusEl.textContent = "❌ Missing — click install dependencies";
       this.depsStatusEl.className = "local-tts-server-status status-error";
     }
   }
